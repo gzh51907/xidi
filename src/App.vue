@@ -27,4 +27,8 @@ html{
 li{
   list-style:none;
 }
+a{
+  text-decoration: none;
+  color: #4a82b1;
+}
 </style>

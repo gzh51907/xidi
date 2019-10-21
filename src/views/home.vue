@@ -1,15 +1,6 @@
 <template>
     <div class="home">
-        <header class="header">
-            <div class="logo">
-                <img src="../imgs/logo.png" alt="">
-                <span> 喜 地</span>
-            </div>
-            <div class="search">
-                <i class="el-icon-search"></i>
-                逛世界
-            </div>
-        </header>
+        <top></top>
 
         <section class="section">
             <div class="carousel">
@@ -631,54 +622,19 @@
 
         </section>
 
-        <div class="backPageTop showFixedModule" style="opacity: 1;" >
-            <div class="icon-box iconTop">
-                <i class="icon el-icon-arrow-up"></i>
-            </div>
-        </div>
+        <backtop></backtop>
 
-        <section class="foot_tab clear">
-            <ul>
-                <li>
-                    <div class="link oversea-origin on">
-                        <i class="icon icon_homenew_on el-icon-s-home"></i>
-                        <div>首页</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="link factory-parity">
-                        <i class="icon icon_country2 el-icon-s-flag"></i>
-                        <div>国家馆</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="link certified-products">
-                        <i class="icon icon_classification el-icon-menu"></i>
-                        <div>分类</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="link shanghai-postal">
-                        <i class="icon icon_Cart el-icon-shopping-cart-full"></i>
-                        <div>购物车</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="link shanghai-postal">
-                        <i class="icon icon_me_unselected el-icon-s-custom"></i>
-                        <div>我</div>
-                    </div>
-                </li>
-            </ul>
-        </section>
+        <footerTab />
     </div>
 </template>
 
 
 <script>
-// import Swiper from 'swiper'
 import 'swiper/css/swiper.min.css'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
+import top from '../components/header.vue'
+import backtop from '../components/backPageTop.vue'
+import footerTab from '../components/footer.vue'
 export default {
     data(){
         return{
@@ -691,23 +647,29 @@ export default {
         }
     },
     async created(){
-        const homedata = await this.$axios(
-            'https://api.m.xidibuy.com/v2/index/home'
+        // const homedata = await this.$axios(
+        //     'https://api.m.xidibuy.com/v2/index/home'
+        // )
+        const dbdata = await this.$axios(
+            'http://10.3.133.74:4321/home'
         )
-        this.carousel = homedata.data.data.slide
-        this.three_img_box = homedata.data.data.modules[0].data
-        this.main = homedata.data.data.modules
-        window.console.log(homedata,this.main)
+        this.carousel = dbdata.data[0].data.slide
+        this.three_img_box = dbdata.data[0].data.modules[0].data
+        this.main = dbdata.data[0].data.modules
+        // window.console.log(dbdata.data[0].data)
     },
     components: {
         swiper,
-        swiperSlide
+        swiperSlide,
+        top,
+        backtop,
+        footerTab
     }
 
 }
 </script>
 
-<style scope>
+<style>
 .clear::after{
     content: '';
     display: block;
@@ -718,63 +680,26 @@ export default {
 }
 .home{
     width: 100%;
-}
-.header {
-  box-sizing: border-box;
-  padding: 0 1.25rem;
-  height: 4.166667rem;
-  background-color: #fff;
-  position: fixed;
-  z-index: 995;
-  top: 0;
-  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
-  margin: 0 auto;
-  width: 100%;
-  text-align: center;
-}
-.logo {
-  display: inline-block;
-  line-height: 4.166667rem;
-  height: 100%;
-  font-size: 2.333333rem;
-  color: #333;
-}
-.logo img {
-  vertical-align: middle;
-}
-.search {
-  width: 7.5rem;
-  position: absolute;
-  right: 0.83333rem;
-  top: 0.83333rem;
-  height: 2.33333rem;
-  border-radius: 0.33333rem;
-  background-color: #f3f3f3;
-  line-height: 2.5rem;
-  overflow: hidden;
-  box-sizing: border-box;
-  padding: 0 0.83333rem;
-  color: #c5c5c5;
-  font-size: 1.16667rem;
-  text-align: left;
-}
-.section{
-    margin-top: 4.166667rem;
+    overflow-x: hidden;
+    margin-bottom: 4.166667rem
 }
 
 /* -------轮播-------  */
+
 .carousel img{
     width: 100%;
 }
 .el-carousel__indicator--horizontal{
     width: 5px;
     height: 5px;
+    padding: 10px 4px;
 }
 .el-carousel__button{
     width: 100%;
     height: 5px;
     border-radius: 5px
 }
+
 /* -------轮播结束-------  */
 
 .home_info{
@@ -1052,27 +977,6 @@ footer.footer .copyright{
     font-size: 0.91667rem;
 }
 
-
-.showFixedModule {
-    bottom: 6.66667rem;
-}
-.backPageTop {
-    background-color: transparent;
-    width: 5rem;
-    height: 5rem;
-    right: 0;
-    bottom: 6rem;
-    z-index: 900;
-    opacity: 0;
-}
-.backPageTop .iconTop {
-    right: 1.25rem;
-    bottom: 0;
-}
-.backPageTop, .iconCart {
-    transition: .6s;
-    position: fixed;
-}
 .icon-box {
     background-color: rgba(0,0,0,.3);
     width: 3.33333rem;
@@ -1101,35 +1005,5 @@ footer.footer .copyright{
     -moz-osx-font-smoothing: grayscale;
 }
 
-.foot_tab {
-    width: 100%;
-    position: fixed;
-    height: 3.33333rem;
-    border: 1px solid #dddddd;
-    bottom: 0;
-    left: 0;
-    background-color: #ffffff;
-    z-index: 100;
-    padding: 0.41667rem 0;
-}
-.foot_tab li {
-    display: block;
-    float: left;
-    width: 20%;
-    text-align: center;
-}
-.foot_tab li .link.on {
-    color: #00bebf;
-}
-.foot_tab li .link {
-    display: inline-block;
-    color: #777777;
-}
-.foot_tab li .link.on .icon {
-    color: #00bebf;
-}
-.foot_tab li .link .icon {
-    vertical-align: top;
-    display: inline-block;
-}
+
 </style>
