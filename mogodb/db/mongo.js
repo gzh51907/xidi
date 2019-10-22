@@ -93,12 +93,54 @@ async function create(colName, data) {
  * @param {String} colName 
  * @param {Object} query 
  */
-async function remove(colName, query) {
+async function remove(colName, condition,condition2) {
     let { db, client } = await connect();
     // 获取集合
     let col = db.collection(colName);
+    let target = condition2.target;
+    let val = condition2.val;
+    let result 
+    if (val){
+        // console.log(val)
+        result = await col.update(
+            condition,
+            {
+                $pull: {
+                    [target]: val
+                        
+                }
+            }
+    
+        );
+    }else{
+        result = await col.update(
+            condition,
+            {
+                $unset: {
+                    [target] : true
+                }
+            }
+    
+        );
+    }
+  
 
-    let result = await col.deleteMany(query);
+
+    // db.shopping.update(
+    //     {'username':'zxc123'},
+    //     { $pull: {'data.shop678':
+    //                     { shopId:678,  goodsId:3872} 
+    //                                                     } }
+    //     )
+
+    // db.shopping.update(
+    //     {'username':'zxc123'},
+    //      { $unset: {'data.shop678':true} }
+    //     )
+    
+
+
+    // console.log(condition)
     client.close();
     return result;
 }
@@ -134,26 +176,25 @@ async function update(colName, query, { way, target, buyNum, agentId }) {
 
     let { db, client } = await connect();
     let col = db.collection(colName);
-
     let arr = target + '.$[val].buyNum';
-
     let result = await col.update(
         query,
-        {
+         {
             [way]: {
-                [arr]: buyNum
-            }
-        }, {
-        arrayFilters: [{
-            "val.goodsId": agentId
-        }],
-        multi: true
+            [arr]:Number(buyNum) 
+         }
+     }, {
+         arrayFilters: [ {
+             "val.goodsId": Number(agentId)
+         }],
+         multi: true
+
     }
 
 
 
     );
-    
+
 
     client.close();
     return result;
@@ -224,62 +265,25 @@ async function find(colName, condition, condition2) {
 
     // condition2 = {  target , val } 
 
-
+  let result
 
     if (condition2) {
         let target = condition2.target;
         let val = condition2.val;
-        console.log(condition2)
+        // console.log( condition,  target , val)
         result = await col.find(
-                {
-                    '$and': [
-                        condition,
-                        { [target]: { '$elemMatch': val } }
-                        // {'data.shop651' : {'$elemMatch' : {"shopId": 651} }}
-                    ]
-                }
+            {
+                '$and': [
+                    condition,
+                    { [target]: { '$elemMatch': val } }
+                    // {'data.shop651' : {'$elemMatch' :{ goodsId: '1161' } }}
+                ]
+            }
 
         ).toArray();
     } else {
         result = await col.find(condition).toArray();
     }
-
-
-
-    // db.shopping.find( {
-    //     '$and': [
-    //         { "userName" : "zxc123"} ,
-    //        {"data.shop906":{'$elemMatch' : {"shopId":906}}}     
-    //           ]
-    //    })
-
-    // }
-    // if (way == 'aggregate') {
-    //     result = await
-    //         col.aggregate([
-    //             { '$match': { [target]: Number(query) } },
-    //         ]).toArray();;
-    // }
-
-
-    // db.shopping.find(  {"data.shop906":{$elemMatch : {"goodsId":906}}}     )
-
-
-    // db.goods.aggregate([
-    //     { '$match': { 'data.categoryInfo.data.thirdName' : '汤锅' } },
-    // ])
-    // if (way == 'aggregate') {
-    //     result = await 
-
-    //     col.aggregate([
-    //         { '$match': { 'data.id': Number(query) } },
-    //     ]).toArray();;
-
-    // }
-
-
-
-
     // 关闭数据库连接
     client.close();
     //返回结果

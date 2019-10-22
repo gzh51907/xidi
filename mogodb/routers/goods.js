@@ -4,12 +4,11 @@ const {mongo} = require('../db')
 const {formatData} = require('../utils')
 
 
-Router.use('/:id',async  (req,res) => {
-     let id = req.params.id;
-
-    let  result = await mongo.find('goods', 'aggregate',id);
-    // let  result = await mongo.find('home','find')
-
+Router.use('/',async  (req,res) => {
+     let id = req.body.id;
+   //  console.log(id)
+     let condition = {'data.id' : Number(id)}
+    let  result = await mongo.find('goods',condition);
     res.send(result);
  })
 

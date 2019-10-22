@@ -1,0 +1,2 @@
+{"_id":{"$oid":"5daacc0afe5c7853e4e7eece"},"username":"13680693755","password":"123456","regtime":{"$date":"2019-10-19T08:40:42.743Z"}}
+{"_id":{"$oid":"5daacdadfe5c7853e4e7eed0"},"username":"13680693756","password":"123456","regtime":{"$date":"2019-10-19T08:47:41.284Z"}}

@@ -15,50 +15,34 @@ const colName = 'user'
 
 // 注册
 // /user/reg
+
+
+
 Router.post('/reg', async (req, res) => {
-    // let {username,password} = req.body;
 
-    
-    
-    let {username,password} = req.query;
-     
-
-
-    // username = "zero";
-    // password = "zero";
-
-
+    let { username, password } = req.body;
+    // let username = req.body.username;
+    // let password = req.body.password;
+    // console.log(username, password)
+    // console.log(req.body)
     let results = await mongo.find(colName, { username: username });
-    console.log(results.length)
+    // console.log(results.length)
     if (results.length > 0) {
-            res.send('false')
+        res.send('false')
     } else {
         let result = await mongo.create(colName, [{ username, password, regtime: new Date() }]);
-                let  resultShop = await mongo.create('shopping',[{ username,'data':{}}])  
+        let resultShop = await mongo.create('shopping', [{ username, 'data': {} }])
         res.send('true');
     }
 
 
 })
 
-Router.get('/check', async (req, res) => {
-    let { username } = req.query;
-
-    let result = await mongo.find(colName, { username });
-    if (result.length) {
-        res.send(formatData({ code: 0 }))// {code:1,msg:'success',data}
-    } else {
-        res.send(formatData());
-    }
-})
 
 // 登录
 Router.post('/login', async (req, res) => {
 
-    // let {username} = req.body;
-    // let {password} = req.body;
-    // let mdl = true;
-    let {username,password,mdl} = req.query;
+    let { username, password, mdl } = req.body;
 
     let result = await mongo.find("user", { username, password });
     if (result.length > 0) {
@@ -67,36 +51,12 @@ Router.post('/login', async (req, res) => {
         if (mdl) {
             Authorization = token.create(username)
         }
-        res.send(formatData({ data: Authorization }));
+        res.send({ "data": Authorization,"code": true });
     } else {
-        res.send(formatData({ code: 0 }))
+        res.send({ "code": false })
     }
-    res.send(result)
+
 })
-
-
-// 查询所有用户
-Router.get('/', async (req, res) => {
-    let result = await mongo.find('user', { age: '28', gener: 'jingjing' })
-
-    res.send(result)
-})
-
-Router.route('/:id')
-    // 删除
-    .delete((req, res) => {
-
-    })
-    // 用户信息修改
-    .patch((req, res) => {
-
-    })
-
-    // 查询用户
-    .get((req, res) => {
-
-    })
-
 
 
 
