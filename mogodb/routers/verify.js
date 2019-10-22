@@ -9,7 +9,7 @@ const {formatData,token} = require('../utils')
 
 Router.use('/',(req,res,next)=>{
 
-    let Authorization = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoienhjMTIzIiwiaWF0IjoxNTcxMjEyNzkxLCJleHAiOjE1NzE4MTc1OTF9.qlOeE4HeHoCFtCSDlMrYO1RlIKiVQftbcRTwOBJu5Wk'
+    let Authorization =  req.query;
     // req.get('Authorization');
 
     // 校验token有效性

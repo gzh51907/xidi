@@ -1,10 +1,4 @@
-/**
- * 用户CRUD
- * 增：C（Create）
- * 删：D（Delete）
- * 改：U（Update）
- * 查：R（Retrieve）
- */
+
 const express = require('express');
 const Router = express.Router();
 
@@ -21,12 +15,9 @@ const colName = 'user'
 Router.post('/reg', async (req, res) => {
 
     let { username, password } = req.body;
-    // let username = req.body.username;
-    // let password = req.body.password;
-    // console.log(username, password)
-    // console.log(req.body)
+
     let results = await mongo.find(colName, { username: username });
-    // console.log(results.length)
+
     if (results.length > 0) {
         res.send('false')
     } else {

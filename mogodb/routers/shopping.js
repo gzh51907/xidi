@@ -1,8 +1,6 @@
 const express = require('express');
 const Router = express.Router();
 const { mongo } = require('../db')
-const { formatData, token } = require('../utils')
-// Router.use(express.urlencoded({extended:true}),express.json());//推导：内部自动调用next
 /**
  * 增
  * @param {String} colName  集合名称
@@ -85,20 +83,20 @@ Router.get('/create', async (req, res, next) => {
     // val : 修改的值
     //  console.log(result.length)
     let way;
-    // console.log(result)
+    console.log(result)
     if (result.length > 0) {
-        // console.log(1)                                                    //有则修改
+        console.log(1)                                                    //有则修改
         way = '$set';
         let query = { way, target, buyNum, agentId }
         let result2 = await mongo.update('shopping', condition, query);
         res.send("true")
     } else {
-        // console.log(2)                                                              //无则创建                                                                  
+                                                           //无则创建                                                                  
         way = '$push';
         let condition3 = { "data.id": Number (agentId) }
-        // console.log(condition3)
+
         let result3 = await mongo.find('goods', condition3);
-        // res.send(result3)
+
         target = 'data.shop' + [result3[0].data.shop.id,]
         let query = {
 
